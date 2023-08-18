@@ -86,15 +86,16 @@ async def sql_admin_show_booked_feedbacks():
 
 
 async def sql_admin_delete_feedback(id_feedback=None):
-    cur.execute('DELETE FROM feedback WHERE id=?', (id_feedback,))
-    base.commit()
-    cur.execute('''
-        UPDATE users
-        SET dateTimeFeedback=NULL,
-            status="available"
-        WHERE id_feedback=?
-    ''', (id_feedback,))
-    base.commit()
+    if cur.execute('SELECT id FROM feedback WHERE id=?', (id_feedback,)).fetchone():
+        cur.execute('DELETE FROM feedback WHERE id=?', (id_feedback,))
+        base.commit()
+        cur.execute('''
+            UPDATE users
+            SET dateTimeFeedback=NULL,
+                status="available"
+            WHERE id_feedback=?
+        ''', (id_feedback,))
+        base.commit()
 
 
 async def sql_admin_get_user(user_id):
