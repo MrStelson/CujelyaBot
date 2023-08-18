@@ -10,16 +10,11 @@ class FSMResume(StatesGroup):
     resume = State()
 
 
-class FSMAddFeedback(StatesGroup):
+class FSMAdminAddFeedback(StatesGroup):
     date = State()
     time = State()
 
 
-class FSMDeleteFeedback(StatesGroup):
-    feedback = State()
-
-
-class FSMGetFeedback(StatesGroup):
-    date = State()
-    time = State()
+class FSMAdminMailing(StatesGroup):
+    mail = State()
     success = State()

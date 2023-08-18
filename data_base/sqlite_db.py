@@ -20,7 +20,8 @@ def sql_start():
             fullname VARCHAR (100),
             id_feedback INT,
             dateTimeFeedback DATETIME,
-            status VARCHAR(20)
+            status VARCHAR(20),
+            chat_user_id INTEGER
         )
     ''')
 
@@ -48,10 +49,11 @@ async def get_date_time(date_time: str):
 
 async def sql_add_user(data_users):
     cur.execute('''
-        INSERT OR IGNORE INTO users (user_id, username, fullName, id_feedback, dateTimeFeedback, status)
-        VALUES (?, ?, ?, ?, ?, ?)
+        INSERT OR IGNORE INTO users (user_id, username, fullName, id_feedback, dateTimeFeedback, status, chat_user_id)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
     ''', data_users)
     base.commit()
+
 
 async def sql_add_feedback(data):
     data_values = tuple(data.values())
@@ -98,6 +100,11 @@ async def sql_admin_delete_feedback(id_feedback=None):
 async def sql_admin_get_user(user_id):
     user = cur.execute('SELECT * from users WHERE user_id=?', (user_id,)).fetchone()
     return user
+
+
+async def sql_admin_get_all_users_id():
+    users_id = cur.execute('SELECT user_id from users').fetchall()
+    return users_id
 
 
 async def sql_admin_update_status(id_feedback=None, status=None):

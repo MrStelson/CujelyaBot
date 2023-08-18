@@ -4,6 +4,7 @@ from aiogram import types
 from aiogram.dispatcher.filters.builtin import Command, Text
 from dotenv import load_dotenv, find_dotenv
 
+from config import CHAT_ID
 from loader import dp, bot
 from keyboards.client import mainKeyboard, cancelKeyboard
 
@@ -35,7 +36,7 @@ async def cancel_handler_resume(message: types.Message, state: FSMResume):
 async def give_resume(message: types.Message, state: FSMResume):
     async with state.proxy() as data:
         data['resume_id'] = message.document.file_id
-    await bot.send_document(os.getenv('CHAT_ID'), document=message.document.file_id)
-    await bot.send_message(os.getenv('CHAT_ID'), text=f'Резюме from @{message.from_user.username}')
+    await bot.send_document(CHAT_ID, document=message.document.file_id)
+    await bot.send_message(CHAT_ID, text=f'Резюме from @{message.from_user.username}')
     await message.answer(text='Твое резюме отправлено', reply_markup=mainKeyboard)
     await state.finish()

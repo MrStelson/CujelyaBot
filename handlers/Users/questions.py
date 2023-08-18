@@ -6,7 +6,7 @@ from dotenv import load_dotenv, find_dotenv
 
 from loader import dp, bot
 from keyboards.client import mainKeyboard, cancelKeyboard
-
+from config import CHAT_ID
 from states.States import FSMQuestion
 
 load_dotenv(find_dotenv())
@@ -34,6 +34,6 @@ async def cancel_handler_question(message: types.message, state: FSMQuestion):
 @dp.message_handler(state=FSMQuestion.question)
 async def give_question(message: types.message, state: FSMQuestion):
     question = message.text
-    await bot.send_message(os.getenv('CHAT_ID'), text=f'{question}\nfrom @{message.from_user.username}')
+    await bot.send_message(CHAT_ID, text=f'{question}\nfrom @{message.from_user.username}')
     await message.answer(text='Твой вопрос задан!', reply_markup=mainKeyboard)
     await state.finish()

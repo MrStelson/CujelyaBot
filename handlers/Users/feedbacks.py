@@ -13,7 +13,7 @@ from config import CHAT_ID
 async def show_all_feedbacks_dates(message: types.message):
     user_id = message.from_user.id
     user = await sql_check_user_status(user_id)
-    if user[-1] == 'available':
+    if user[-2] == 'available':
         data = await sql_show_feedbacks()
         keyboard = await feedback_keyboard_date(data, user_id)
         if data:

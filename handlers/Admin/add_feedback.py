@@ -1,6 +1,6 @@
 from aiogram import types
 from loader import dp
-from states.States import FSMAddFeedback
+from states.States import FSMAdminAddFeedback
 from keyboards.admin import adminMainKeyboard
 from keyboards.client import cancelKeyboard
 from config import ADMIN_ID_FIRST, ADMIN_ID_SECOND
@@ -9,6 +9,7 @@ import re
 from datetime import datetime
 
 ADMIN_ID_LIST = [ADMIN_ID_FIRST, ADMIN_ID_SECOND]
+
 
 def is_valid_date(input_date):
     try:
@@ -37,7 +38,7 @@ def is_valid_time(input_date):
 @dp.message_handler(text='Добавить запись', state=None)
 async def add_feedback_start(message: types.message):
     if message.from_user.id in ADMIN_ID_LIST:
-        await FSMAddFeedback.date.set()
+        await FSMAdminAddFeedback.date.set()
         await message.answer('Напиши дату в формате ДД.ММ\nДля отмены нажми кнопку',
                              reply_markup=cancelKeyboard)
     else:
@@ -45,8 +46,8 @@ async def add_feedback_start(message: types.message):
 
 
 # exit
-@dp.message_handler(text='Отмена', state=FSMAddFeedback.date)
-async def cancel_handler_feedback_date(message: types.message, state: FSMAddFeedback):
+@dp.message_handler(text='Отмена', state=FSMAdminAddFeedback.date)
+async def cancel_handler_feedback_date(message: types.message, state: FSMAdminAddFeedback):
     current_state = await state.get_state()
     if current_state is None:
         return
@@ -54,15 +55,15 @@ async def cancel_handler_feedback_date(message: types.message, state: FSMAddFeed
     await message.reply("Запись отменена", reply_markup=adminMainKeyboard)
 
 
-@dp.message_handler(state=FSMAddFeedback.date)
-async def add_feedback_date(message: types.message, state: FSMAddFeedback):
+@dp.message_handler(state=FSMAdminAddFeedback.date)
+async def add_feedback_date(message: types.message, state: FSMAdminAddFeedback):
     if message.from_user.id in ADMIN_ID_LIST:
         async with state.proxy() as data:
             data['date'] = message.text
             data['user_message_date'] = message
         if is_valid_date(data['date']):
             await message.answer('Напиши время в формате ЧЧ:ММ\nДля отмены нажми кнопку', reply_markup=cancelKeyboard)
-            await FSMAddFeedback.time.set()
+            await FSMAdminAddFeedback.time.set()
         else:
             await message.answer('Неправильный формат даты.')
             await add_feedback_start(message)
@@ -71,8 +72,8 @@ async def add_feedback_date(message: types.message, state: FSMAddFeedback):
 
 
 # exit
-@dp.message_handler(text='Отмена', state=FSMAddFeedback.time)
-async def cancel_handler_feedback_time(message: types.message, state: FSMAddFeedback):
+@dp.message_handler(text='Отмена', state=FSMAdminAddFeedback.time)
+async def cancel_handler_feedback_time(message: types.message, state: FSMAdminAddFeedback):
     current_state = await state.get_state()
     if current_state is None:
         return
@@ -80,8 +81,8 @@ async def cancel_handler_feedback_time(message: types.message, state: FSMAddFeed
     await message.reply("Запись отменена", reply_markup=adminMainKeyboard)
 
 
-@dp.message_handler(state=FSMAddFeedback.time)
-async def add_feedback_time(message: types.message, state: FSMAddFeedback):
+@dp.message_handler(state=FSMAdminAddFeedback.time)
+async def add_feedback_time(message: types.message, state: FSMAdminAddFeedback):
     if message.from_user.id in ADMIN_ID_LIST:
         async with state.proxy() as data:
             data['time'] = message.text

@@ -1,8 +1,10 @@
 from aiogram.types import ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton
 
 mainKeyboard = ReplyKeyboardMarkup(resize_keyboard=True)
-mainKeyboard.row('Задать вопрос', 'Отправить резюме на разбор').add('Записаться на консультацию').row('Контакты',
-                                                                                                      'Помощь')
+mainKeyboard. \
+    row('Задать вопрос', 'Отправить резюме на разбор'). \
+    add('Записаться на консультацию'). \
+    row('Контакты', 'Помощь')
 
 cancelKeyboard = ReplyKeyboardMarkup(resize_keyboard=True)
 cancelKeyboard.add('Отмена')

@@ -1,7 +1,15 @@
 from aiogram.types import ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton
 
 adminMainKeyboard = ReplyKeyboardMarkup(resize_keyboard=True)
-adminMainKeyboard.row('Добавить запись', 'Удалить прошедшие записи').row('Показать все записи', 'Показать активные записи')
+adminMainKeyboard. \
+    row('Добавить запись', 'Удалить прошедшие записи'). \
+    row('Показать все записи', 'Показать активные записи'). \
+    add('Сделать рассылку')
+
+adminMailTrueFalseKeyboard = InlineKeyboardMarkup(resize_keyboard=True)
+mailTrue = InlineKeyboardButton(text='Подтвердить', callback_data='mail_admin_true')
+mailFalse = InlineKeyboardButton(text='Отменить', callback_data='mail_admin_false')
+adminMailTrueFalseKeyboard.row(mailTrue, mailFalse)
 
 
 async def keyboard_delete_update(id_feedback):
