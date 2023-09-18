@@ -32,8 +32,8 @@ python app.py
 
 ---
 #### Before start project necessary create config file "config.py" with cons:
-- BOT_TOKEN = <"your token">
-- CHAT_ID = <"your chat id"> (for send message from users )
-- ADMIN_ID_FIRST = <"admin id"> (for settings feedbacks and send mailing )
-- HOUR_OFFSET = <"your hour offset"> (Default = 4)
-- YEAR = <"your year"> (Default = 2023)
+- BOT_TOKEN = \<your token\>
+- CHAT_ID = \<your chat id\> (for send message from users )
+- ADMIN_ID_FIRST = \<admin id\> (for settings feedbacks and send mailing )
+- HOUR_OFFSET = \<your hour offset\> (Default = 4)
+- YEAR = \<your year\> (Default = 2023)
