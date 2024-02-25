@@ -37,3 +37,10 @@ python app.py
 - ADMIN_ID_FIRST = \<admin id\> (for settings feedbacks and send mailing )
 - HOUR_OFFSET = \<your hour offset\> (Default = 4)
 - YEAR = \<your year\> (Default = 2023)
+
+### PostgreSQL
+- DB_HOST=\<your db host\>
+- DB_PORT=\<your db port\>
+- DB_NAME=\<your db name\>
+- DB_USER=\<your db user\>
+- DB_PASS=\<your db user password\>

@@ -1,9 +1,14 @@
-from aiogram import Bot, Dispatcher, types
-from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from aiogram import Bot, types
+
 from config import BOT_TOKEN
+from utils import BotUtils
 
 TOKEN = BOT_TOKEN
-bot = Bot(token=TOKEN, parse_mode=types.ParseMode.HTML)
-storage = MemoryStorage()
+bot = Bot(token=TOKEN)
 
-dp = Dispatcher(bot, storage=storage)
+
+async def on_startup():
+    print("CujelyaBot online")
+    await bot.set_my_commands(
+        commands=BotUtils.start_commands, scope=types.BotCommandScopeAllPrivateChats()
+    )
