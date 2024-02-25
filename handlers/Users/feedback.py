@@ -28,7 +28,7 @@ async def show_all_feedbacks_dates(message: types.message):
 
     datetime_now = datetime.now() - timedelta(hours=HOUR_OFFSET)
 
-    if user.dateTimeFeedback <= datetime_now:
+    if (user_time_feedback := user.dateTimeFeedback) and user_time_feedback <= datetime_now:
         user = await UserRepositoryImplementation.update_user(
             user_dto=UserDto(
                 id=user.id,
