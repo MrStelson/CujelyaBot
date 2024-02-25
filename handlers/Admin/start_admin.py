@@ -1,20 +1,12 @@
-from aiogram import types
-from dotenv import load_dotenv, find_dotenv
+from aiogram import types, Router
+from aiogram.filters import Command
 
-from loader import dp
-from keyboards.admin import adminMainKeyboard
-from keyboards.client import mainKeyboard
-from config import ADMIN_ID_FIRST, ADMIN_ID_SECOND
+from keyboards.admin import admin_main_keyboard
 
-load_dotenv(find_dotenv())
-
-ADMIN_ID_LIST = [ADMIN_ID_FIRST, ADMIN_ID_SECOND]
+admin_start_router = Router()
 
 
-@dp.message_handler(commands=['start_admin'])
+@admin_start_router.message(Command('start_admin'))
 async def bot_admin_start(message: types.Message):
-    await message.delete()
-    if message.from_user.id in ADMIN_ID_LIST:
-        await message.answer(f"Привет, админ {message.from_user.full_name}!", reply_markup=adminMainKeyboard)
-    else:
-        await message.answer(f'Вы не являетесь администратором', reply_markup=mainKeyboard)
+    await message.answer(f"Привет, админ {message.from_user.full_name}!", reply_markup=admin_main_keyboard)
+

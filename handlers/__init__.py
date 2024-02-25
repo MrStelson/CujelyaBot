@@ -1,2 +1,2 @@
-from . import Users
-from . import Admin
+from .Users import user_routers
+from .Admin import admin_routers

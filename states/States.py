@@ -1,9 +1,8 @@
-from aiogram.dispatcher.filters.state import StatesGroup, State
+from aiogram.fsm.state import State, StatesGroup
 
 
 class FSMQuestion(StatesGroup):
     question = State()
-    # send = State()
 
 
 class FSMResume(StatesGroup):
