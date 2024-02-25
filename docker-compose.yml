@@ -1,0 +1,33 @@
+version: "3.8"
+services:
+  postgres:
+    image: postgres:15
+    container_name: cujelya_bot_db
+    env_file:
+      - .env
+    ports:
+      - "32000:5432"
+    volumes:
+      - cujelya_db:/var/lib/postgresql/data
+    networks:
+      - botnet
+
+  bot:
+    build:
+      context: .
+    env_file:
+      - .env
+    container_name: cujelya_bot_app
+    command: ["/cujelya_bot/start_bot.sh"]
+    depends_on:
+      - postgres
+    networks:
+      - botnet
+
+volumes:
+  cujelya_db:
+    driver: local
+
+networks:
+  botnet:
+    driver: bridge

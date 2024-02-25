@@ -1,0 +1,14 @@
+# Development
+.idea/
+__pycache__/
+.vscode/
+venv/
+.venv/
+
+# Docker related
+Dockerfile
+docker-compose.yml
+
+# misc
+readme.md
+.gitignore
