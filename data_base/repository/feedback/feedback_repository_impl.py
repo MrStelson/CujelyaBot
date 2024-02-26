@@ -46,6 +46,23 @@ class FeedbackRepositoryImplementation:
             ]
 
     @staticmethod
+    async def get_feedback_by_id(feedback_id: int) -> Feedback | None:
+        """
+        Метод получения консультации по идентификатору
+
+        Args
+         id (int): Идентификатор записи
+
+        Returns:
+            Feedback | None: Консультация
+        """
+        async with async_session_factory() as session:
+            if feedback := await session.get(ORMFeedback, feedback_id):
+                return Feedback.model_validate(feedback, from_attributes=True)
+
+            return None
+
+    @staticmethod
     async def get_all_booked_success_feedbacks() -> List[Feedback]:
         """
         Метод получения всех забронированных и подтвержденных
@@ -88,7 +105,10 @@ class FeedbackRepositoryImplementation:
 
     @staticmethod
     async def update_feedback_status(
-        feedback_id: int, status: str, user_id: int | None = None
+        feedback_id: int,
+        status: str,
+        user_id: int | None = None,
+        username: str | None = None,
     ) -> Feedback:
         """
         Метод обновления статуса консультации
@@ -97,6 +117,7 @@ class FeedbackRepositoryImplementation:
             feedback_id (int): Идентификатор консультации
             status (str): Новый статус консультации
             user_id (int): Идентификатор пользователя. Defaults to None
+            username (str): Имя пользователя
 
         Returns:
             Feedback: Консультация
@@ -105,11 +126,8 @@ class FeedbackRepositoryImplementation:
             stmt = (
                 update(ORMFeedback)
                 .filter(ORMFeedback.id == feedback_id)
-                .values(status=status)
+                .values(status=status, user_id=user_id, username=username)
             )
-
-            if user_id is not None:
-                stmt.values(user_id=user_id)
 
             await session.execute(stmt)
             await session.commit()
@@ -147,14 +165,15 @@ class FeedbackRepositoryImplementation:
             query = (
                 select(ORMFeedback)
                 .filter(ORMFeedback.dateTimeFeedback >= datetime_now)
+                .filter(ORMFeedback.status == "available")
                 .order_by(ORMFeedback.dateTimeFeedback)
             )
             result = await session.execute(query)
             feedbacks = result.scalars().all()
 
             return [
-                Feedback.model_validate(user, from_attributes=True)
-                for user in feedbacks
+                Feedback.model_validate(feedback, from_attributes=True)
+                for feedback in feedbacks
             ]
 
     @staticmethod

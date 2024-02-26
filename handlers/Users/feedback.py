@@ -28,7 +28,9 @@ async def show_all_feedbacks_dates(message: types.message):
 
     datetime_now = datetime.now() - timedelta(hours=HOUR_OFFSET)
 
-    if (user_time_feedback := user.dateTimeFeedback) and user_time_feedback <= datetime_now:
+    if (
+        user_time_feedback := user.dateTimeFeedback
+    ) and user_time_feedback <= datetime_now:
         user = await UserRepositoryImplementation.update_user(
             user_dto=UserDto(
                 id=user.id,
@@ -103,11 +105,14 @@ async def feedback_success(callback: types.CallbackQuery):
     )
 
     if feedback.status == "available":
+        user = await UserRepositoryImplementation.get_user_by_id(user_id=user_id)
         await FeedbackRepositoryImplementation.update_feedback_status(
-            feedback_id=feedback.id, status="booked"
+            feedback_id=feedback.id,
+            status="booked",
+            user_id=user.id,
+            username=user.username,
         )
 
-        user = await UserRepositoryImplementation.get_user_by_id(user_id=user_id)
         user = await UserRepositoryImplementation.update_user(
             user_dto=UserDto(
                 id=user.id,
@@ -130,6 +135,6 @@ async def feedback_success(callback: types.CallbackQuery):
 
 
 @user_feedback_router.callback_query(F.data.startswith("feedback_canceled"))
-async def feedback_success(callback: types.CallbackQuery):
+async def feedback_canceled(callback: types.CallbackQuery):
     await callback.message.answer("Запись отменена")
     await callback.message.delete()
