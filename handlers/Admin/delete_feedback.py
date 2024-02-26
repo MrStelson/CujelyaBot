@@ -5,6 +5,7 @@ from data_base.repository.feedback.feedback_repository_impl import (
 )
 from data_base.repository.user.user_repository_impl import UserRepositoryImplementation
 from keyboards.admin import keyboard_delete_success, keyboard_delete_update
+from data_base.shemas.user import UserDto
 
 admin_delete_feedback_router = Router()
 
@@ -23,9 +24,18 @@ async def delete_feedback_success(callback: types.CallbackQuery):
     feedback = await FeedbackRepositoryImplementation.delete_feedback(
         feedback_id=int(id_feedback)
     )
-    if feedback.user_id is not None:
-        await UserRepositoryImplementation.update_user_status(
-            user_id=feedback.user_id, status="available"
+    if (
+        user := await UserRepositoryImplementation.get_user_by_id(feedback.user_id)
+    ) and user.status is not None:
+        await UserRepositoryImplementation.update_user(
+            user_dto=UserDto(
+                id=feedback.user_id,
+                username=user.username,
+                fullname=user.fullname,
+                status="available",
+                id_feedback=None,
+                dateTimeFeedback=None,
+            )
         )
 
     await callback.message.edit_text("Запись удалена")

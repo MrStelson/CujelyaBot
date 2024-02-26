@@ -6,6 +6,7 @@ from data_base.repository.feedback.feedback_repository_impl import \
     FeedbackRepositoryImplementation
 from data_base.repository.user.user_repository_impl import \
     UserRepositoryImplementation
+from data_base.shemas.user import UserDto
 from keyboards.admin import keyboard_delete_update, keyboard_update_success
 
 admin_update_feedback_router = Router()
@@ -24,19 +25,30 @@ async def update_status(callback: types.CallbackQuery):
     status = callback.data.split("_")[-2]
     keyboard = await keyboard_delete_update(feedback_id)
 
-    feedback = await FeedbackRepositoryImplementation.update_feedback_status(
-        feedback_id=feedback_id, status=status
+    feedback = await FeedbackRepositoryImplementation.get_feedback_by_id(
+        feedback_id=feedback_id
     )
-    if feedback.user_id is not None:
-        await UserRepositoryImplementation.update_user_status(
-            user_id=feedback.user_id, status="available"
+    updated_feedback = await FeedbackRepositoryImplementation.update_feedback_status(
+        feedback_id=feedback_id, status=status, user_id=None, username=None
+    )
+
+    if user := await UserRepositoryImplementation.get_user_by_id(feedback.user_id):
+        await UserRepositoryImplementation.update_user(
+            user_dto=UserDto(
+                id=user.id,
+                username=user.username,
+                fullname=user.fullname,
+                status="available",
+                id_feedback=None,
+                dateTimeFeedback=None,
+            )
         )
 
     await callback.message.edit_text(
-        text=f"Дата: {feedback.dateTimeFeedback.date()}\n"
-        f"Время: {feedback.dateTimeFeedback.time()}\n"
-        f"Статус: {feedback.status}\n"
-        f"ID Пользователя: {feedback.user_id}\nПользователь: {feedback.username}",
+        text=f"Дата: {updated_feedback.dateTimeFeedback.date()}\n"
+        f"Время: {updated_feedback.dateTimeFeedback.time()}\n"
+        f"Статус: {updated_feedback.status}\n"
+        f"ID Пользователя: {updated_feedback.user_id}\nПользователь: {updated_feedback.username}",
         reply_markup=keyboard,
     )
 
