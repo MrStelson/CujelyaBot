@@ -35,7 +35,7 @@ async def take_img_file(message: types.Message, state: ImgState):
     image_id = message.document.file_id
     image = await bot.get_file(image_id)
     image_io = await bot.download_file(image.file_path)
-    new_filename = f"./temp/{image_name}.png"
+    new_filename = f"./temp/{image_name}"
 
     start_size = sys.getsizeof(image_io)
 
