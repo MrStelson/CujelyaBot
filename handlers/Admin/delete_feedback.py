@@ -38,7 +38,7 @@ async def delete_feedback_success(callback: types.CallbackQuery):
             )
         )
 
-    await callback.message.edit_text("Запись удалена")
+    await callback.message.edit_text(text="Запись удалена")
 
 
 @admin_delete_feedback_router.callback_query(F.data.startswith("delete_false_"))
