@@ -19,6 +19,9 @@ admin_main_keyboard_buttons = [
         KeyboardButton(text="Сделать рассылку"),
         KeyboardButton(text="Вывести всех пользователей"),
     ],
+    [
+        KeyboardButton(text="Сжать изображение"),
+    ],
 ]
 admin_main_keyboard = ReplyKeyboardMarkup(
     keyboard=admin_main_keyboard_buttons, resize_keyboard=True
@@ -70,5 +73,7 @@ async def keyboard_update_success(id_feedback):
     btn_false = InlineKeyboardButton(
         text="Отменить", callback_data=f"update_false_{id_feedback}"
     )
-    keyboard_update_choice_builder.row(btn_available, btn_booked, btn_success, btn_false, width=3)
+    keyboard_update_choice_builder.row(
+        btn_available, btn_booked, btn_success, btn_false, width=3
+    )
     return keyboard_update_choice_builder.as_markup()

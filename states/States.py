@@ -17,3 +17,8 @@ class FSMAdminAddFeedback(StatesGroup):
 class FSMAdminMailing(StatesGroup):
     mail = State()
     success = State()
+
+
+class FSMChangeImgSize(StatesGroup):
+    img_file = State()
+    img_format = State()
